@@ -13,13 +13,20 @@
 </template>
 
 <script setup>
-import { useLayout } from '@/layout/composables/layout';
-import { computed, ref, watch } from 'vue';
+import { useLayout } from '@/layout/composables/layout'
+import { computed, onBeforeMount, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
-import AppFooter from './AppFooter.vue';
-import AppSidebar from './AppSidebar.vue';
-import AppTopbar from './AppTopbar.vue';
+import API from '@/api'
+import Response from '@/utils/response'
+import bus from '@/utils/mitt'
 
+import AppFooter from './AppFooter.vue'
+import AppSidebar from './AppSidebar.vue'
+import AppTopbar from './AppTopbar.vue'
+import storage from '@/utils/storage'
+
+const router = useRouter()
 const { layoutConfig, layoutState, isSidebarActive, resetMenu } = useLayout();
 
 const outsideClickListener = ref(null);
@@ -41,6 +48,25 @@ const containerClass = computed(() => {
         'layout-mobile-active': layoutState.staticMenuMobileActive
     };
 });
+
+onBeforeMount(() => {
+    checkAuth()
+})
+
+const checkAuth = () => {
+    bus.emit("handleLoadingShow")
+    API.Access.checkAuth().then(
+        (res) => {
+            bus.emit("handleLoadingHide")
+        },
+        (err) => {
+            bus.emit("handleLoadingHide")
+            localStorage.clear()
+            router.push('/login')
+            Response.error(err.message)
+        }
+    )
+}
 
 function bindOutsideClickListener() {
     if (!outsideClickListener.value) {

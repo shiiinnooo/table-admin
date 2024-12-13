@@ -1,5 +1,5 @@
 <template>
-    <div v-if="show" class="w-screen h-screen absolute items-center flex z-50" style="background: rgba(200, 200, 200, 0.35)">
+    <div v-if="show" class="w-screen h-screen absolute top-0 items-center flex z-50" style="background: rgba(200, 200, 200, 0.35)">
         <ProgressSpinner />
     </div>
 </template>

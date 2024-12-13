@@ -68,12 +68,26 @@ import { useRouter } from 'vue-router'
 import { useLayout } from '@/layout/composables/layout'
 import AppConfigurator from './AppConfigurator.vue'
 
+import API from '@/api'
+import Response from '@/utils/response'
+import bus from '@/utils/mitt'
+
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout()
 const router = useRouter()
 
 const logout = () => {
-    router.push('/login')
-    localStorage.clear()
+    bus.emit("handleLoadingShow")
+    API.Access.logout().then(
+        (res) => {
+            bus.emit("handleLoadingHide")
+            localStorage.clear()
+            router.push('/login')
+        },
+        (err) => {
+            bus.emit("handleLoadingHide")
+            Response.error(err.message)
+        }
+    )
 }
 </script>
 

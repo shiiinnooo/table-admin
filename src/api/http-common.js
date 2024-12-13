@@ -29,7 +29,7 @@ export default class Http {
                         Response.error('Token 已過期，請重新登入')
                         router.push('/login')
                     } else {
-                        config.headers['Authorization'] = `Bearer ${token}`
+                        config.headers['Authorization'] = token
                     }
                 }
                 return config
@@ -107,7 +107,7 @@ export default class Http {
 
 
     // HTTP Methods POST
-    post(url = "", data = {}, signal) {
+    post(url = "", data, signal) {
         return new Promise((resolve, reject) => {
             try {
                 this.instance.post(url, data, signal)

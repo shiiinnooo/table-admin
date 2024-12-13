@@ -1,6 +1,5 @@
 <template>
     <FloatingConfigurator />
-    <Loading />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
@@ -56,7 +55,6 @@ import Response from '@/utils/response'
 import bus from '@/utils/mitt'
 
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue'
-import Loading from '@/components/Loading.vue'
 
 const router = useRouter()
 
@@ -97,7 +95,6 @@ const onFormSubmit = (e) => {
                     uid
                 }))
                 bus.emit("handleLoadingHide")
-                Response.success('登入成功')
                 router.push('/admin/product')
             },
             (err) => {
