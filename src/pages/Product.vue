@@ -1,1 +1,3 @@
-<template>Product</template>
+<template>
+    Product
+</template>

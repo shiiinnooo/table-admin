@@ -1,6 +1,6 @@
 <template>
     <FloatingConfigurator />
-    <Toast />
+    <Loading />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
@@ -10,7 +10,6 @@
                         <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Admin!</div>
                         <span class="text-muted-color font-medium">Sign in to continue</span>
                     </div>
-
                     <!-- <div> -->
                     <Form v-slot="$form" :resolver="resolver" :initialValues="initialValues" @submit="onFormSubmit" class="flex flex-col w-full gap-3">
                         <!-- <label for="username" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label> -->
@@ -46,16 +45,20 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { Form } from '@primevue/forms'
-import { useToast } from 'primevue/usetoast'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'
+import dayjs from 'dayjs/esm'
 
 import API from '@/api'
+import Response from '@/utils/response'
+import bus from '@/utils/mitt'
 
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue'
+import Loading from '@/components/Loading.vue'
 
-const toast = useToast()
+const router = useRouter()
 
 const initialValues = reactive({
     username: '',
@@ -85,14 +88,21 @@ const resolver = zodResolver(
 const onFormSubmit = (e) => {
     const { valid, values } = e
     if (valid) {
+        bus.emit("handleLoadingShow")
         API.Access.login(values).then(
             (res) => {
-                console.log(res)
-                toast.add({ severity: 'success', summary: '登入成功', life: 3000 })
+                const { token, uid } = res
+                localStorage.setItem("access", JSON.stringify({
+                    token,
+                    uid
+                }))
+                bus.emit("handleLoadingHide")
+                Response.success('登入成功')
+                router.push('/admin/product')
             },
             (err) => {
-                // Response.error(err)
-                console.log(err)
+                bus.emit("handleLoadingHide")
+                Response.error(err.message)
             }
         )
     }

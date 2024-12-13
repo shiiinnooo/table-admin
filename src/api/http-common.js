@@ -1,9 +1,9 @@
 import axios from 'axios'
-import API from '@/api'
-// import router from '@/router'
-import Storage from '@/utils/storage'
+import jwtDecode from 'jwt-decode'
+import dayjs from 'dayjs/esm'
+import { useRouter } from 'vue-router'
+
 import Response from '@/utils/response'
-import { useRoute } from 'vue-router'
 
 export default class Http {
     constructor(url = "", config = {}) {    
@@ -17,19 +17,21 @@ export default class Http {
 
     // axios Interceptors
     interceptors() {
-        let isRefreshing = false
-        let config = []
-        const route = useRoute()
-
-        const subscribeTokenRefresh = (callback) => {
-            config.push(callback)
-        }
+        const router = useRouter()
 
         this.instance.interceptors.request.use(
-            (config) => {                
-                // const token_type = config.url.includes('login/refresh') ? 'refresh_token' : 'access_token'
-                // const token = route.name == 'Login' ? (sessionStorage.getItem("access_token") || Storage.getLocalToken(token_type)) : Storage.getLocalToken(token_type)
-                // if (token) config.headers['Authorization'] = `Bearer ${token}`
+            (config) => {             
+                const token = JSON.parse(localStorage.getItem('access'))?.token ?? ''
+                
+                if (token) {
+                    if (jwtDecode(token).exp < dayjs().unix()) {
+                        localStorage.clear()
+                        Response.error('Token 已過期，請重新登入')
+                        router.push('/login')
+                    } else {
+                        config.headers['Authorization'] = `Bearer ${token}`
+                    }
+                }
                 return config
             },
             (err) => {
@@ -40,55 +42,11 @@ export default class Http {
             // status code <= 2xx 觸發
             async (res) => {
                 if (import.meta.env.DEV) console.log('response', res)
-                // const errorCode = res.data.data
-                // const originalConfig = res.config
-                // const token = Storage.getLocalTokens()
-                // // access_token 過期時，置換 token
-                // if (errorCode === 'CE40103') {
-                //     // 判斷有沒有 token，有就置換，沒有就踢到登入頁
-                //     if (token !== null) {
-                //         if (!isRefreshing) {
-                //             isRefreshing = true
-                //             try {
-                //                 const response = await API.Access.refreshToken()
-                //                 isRefreshing = false
-                //                 const { access_token } = response
-                //                 Storage.updateLocalAccessToken(access_token)
-                                
-                //                 config.forEach((callback) => callback(access_token))
-                //                 config = []
-
-                //                 const re_response = this.instance(originalConfig)
-                //                 return re_response
-
-                //             } catch (err) {
-                //                 return Promise.reject(err)
-                //             }
-                //         } else {
-                //             return new Promise((resolve) => {
-                //                 subscribeTokenRefresh((newToken) => {
-                //                     originalConfig.headers.Authorization = `Bearer ${newToken}`
-                //                     resolve(this.instance(originalConfig))
-                //                 })
-                //             })
-                            
-                //         }
-                //     } else {
-                //         Storage.removeLocalStorage()
-                //     }
-                // }
-                // else if (['CE40001', 'CE40101', 'CE40102', 'CE40104', 'CE40105', 'CE40106', 'CE40107'].includes(errorCode)) {
-                //     Storage.removeLocalStorage()
-                // } 
                 return res
             },
             // status code > 2xx 觸發
             (err) => {
                 console.error(err)
-                // const errorCode = err.code
-                // if (errorCode == 'ERR_NETWORK' || errorCode == 'ERR_BAD_RESPONSE') Response.error('NE50001')
-                // else if (errorCode == 'ERR_CANCELED') Response.warning('API 請求已取消')
-                // else Promise.reject(err)
             }
         )
     }
@@ -100,8 +58,8 @@ export default class Http {
                 this.instance.get(url, { params: params })
                     .then((response) => {
                         const { data } = response
-                        if (data.status) resolve(data.data)
-                        else reject(data.data)
+                        if (data.success) resolve(data)
+                        else reject(data)
                     })
                     .catch((error) => {
                         reject(error)
@@ -150,14 +108,13 @@ export default class Http {
 
     // HTTP Methods POST
     post(url = "", data = {}, signal) {
-        console.log(signal)
         return new Promise((resolve, reject) => {
             try {
                 this.instance.post(url, data, signal)
                     .then((response) => {
                         const { data } = response
-                        if (data.status) resolve(data.data)
-                        else reject(data.data)
+                        if (data.success) resolve(data)
+                        else reject(data)
                     })
                     .catch((error) => {
                         reject(error)
@@ -175,8 +132,8 @@ export default class Http {
                 this.instance.put(url, data)
                     .then((response) => {
                         const { data } = response
-                        if (data.status) resolve(data.data)
-                        else reject(data.data)
+                        if (data.success) resolve(data)
+                        else reject(data)
                     })
                     .catch((error) => {
                         reject(error)
@@ -194,8 +151,8 @@ export default class Http {
                 this.instance.delete(url, { data: payload })
                     .then((response) => {
                         const { data } = response
-                        if (data.status) resolve(data.data)
-                        else reject(data.data)
+                        if (data.success) resolve(data)
+                        else reject(data)
                     })
                     .catch((error) => {
                         reject(error)

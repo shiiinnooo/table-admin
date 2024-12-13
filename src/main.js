@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
 
+import dayjs from 'dayjs/esm'
 import PrimeVue from 'primevue/config';
 import { definePreset } from '@primevue/themes';
 import Aura from '@primevue/themes/aura';
@@ -9,6 +8,9 @@ import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
+
+import App from './App.vue';
+import router from './router';
 
 const app = createApp(App);
 
@@ -30,6 +32,8 @@ const MyPreset = definePreset(Aura, {
         }
     }
 });
+
+app.config.globalProperties.dayjs = dayjs
 
 app.use(router);
 app.use(PrimeVue, {

@@ -5,15 +5,16 @@ import AppLayout from '@/layout/AppLayout.vue';
 const routes = [
     {
         path: '/',
+        redirect: { path: "admin/product" },
         component: AppLayout,
         children: [
             {
-                path: "/admin/product",
+                path: "admin/product",
                 name: "Product",
                 component: () => import('@/pages/Product.vue')
             },
             {
-                path: "/admin/order",
+                path: "admin/order",
                 name: "Order",
                 component: () => import('@/pages/Order.vue')
             },
@@ -155,26 +156,16 @@ const router = createRouter({
     routes,
 });
 
-// router.beforeEach((to) => {
-//     const token = Storage.getLocalToken('access_token')
-//     const auth = Storage.getLocalUserInfo('auth')
+router.beforeEach((to, from) => {
+    const token = JSON.parse(localStorage.getItem('access'))?.token ?? ''
 
-//     if (!token) {
-//         if (to.path === '/reset' || to.path === '/forget/password' || to.path === '/reset/password') {
-//             return true
-//             // 檢查用戶是否登入 ＆ 避免無限重新定向
-//         } else if (to.path !== '/login') {
-//             return { path: '/login', replace: true }
-//         }
-//     } else {
-//         // 判斷有 token 之後，需要權限的頁面是否權限進入此頁
-//         if (to.meta.requireAuth && !auth.includes(to.meta.auth)) {
-//             return { path: '/404' }
-//             // 判斷有 token 之後，如果使用上一頁回到登入頁或直接輸入 '/login' 擋掉
-//         } else if (to.path === 'login') {
-//             return false
-//         }
-//     }
-// })
+    if (!token) {
+        if (to.path !== '/login') return { path: '/login', replace: true }
+    } else {
+        if (to.path == '/login') return {
+            path: '/admin/product', replace: true
+        }
+    }
+})
 
 export default router;
