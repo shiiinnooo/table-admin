@@ -13,7 +13,7 @@
                     <Form v-slot="$form" :resolver="resolver" :initialValues="initialValues" @submit="onFormSubmit" class="flex flex-col w-full gap-3">
                         <!-- <label for="username" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label> -->
                         <div>
-                            <label for="username" class="block">Email</label>
+                            <label for="username" class="block">Account</label>
                             <InputText id="username" name="username" type="text" placeholder="Email address" class="w-full md:w-[30rem]" />
                             <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error.message }}</Message>
                         </div>
@@ -65,7 +65,7 @@ const initialValues = reactive({
 
 const resolver = zodResolver(
     z.object({
-        username: z.string().min(1, { message: 'Username is required.' }),
+        username: z.string().min(1, { message: 'Account is required.' }),
         password: z.string().min(1, { message: 'Password is required.' })
         // password: z
         //     .string()

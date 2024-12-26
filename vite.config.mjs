@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     base: '/table-admin/',
     server: {
-        port: 5174
+        port: 5175
     },
     optimizeDeps: {
         noDiscovery: true

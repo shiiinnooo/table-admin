@@ -72,38 +72,38 @@ export default class Http {
 
 
     // HTTP Methods GET - Download File
-    download(url = "", params = {}) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.instance.get(url, { params: params, responseType: 'blob' })
-                    .then((response) => {
-                        resolve(response)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
-            } catch (error) {
-                reject(error)
-            }
-        })
-    }
+    // download(url = "", params = {}) {
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             this.instance.get(url, { params: params, responseType: 'blob' })
+    //                 .then((response) => {
+    //                     resolve(response)
+    //                 })
+    //                 .catch((error) => {
+    //                     reject(error)
+    //                 })
+    //         } catch (error) {
+    //             reject(error)
+    //         }
+    //     })
+    // }
 
     // HTTP Methods Post - Download File
-    downloadPost(url = "", data) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.instance.post(url, data, { responseType: 'blob' })
-                    .then((response) => {
-                        resolve(response)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
-            } catch (error) {
-                reject(error)
-            }
-        })
-    }
+    // downloadPost(url = "", data) {
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             this.instance.post(url, data, { responseType: 'blob' })
+    //                 .then((response) => {
+    //                     resolve(response)
+    //                 })
+    //                 .catch((error) => {
+    //                     reject(error)
+    //                 })
+    //         } catch (error) {
+    //             reject(error)
+    //         }
+    //     })
+    // }
 
 
     // HTTP Methods POST
@@ -145,10 +145,10 @@ export default class Http {
     }
 
     // HTTP Methods DELETE
-    delete(url = "", payload = []) {
+    delete(url = "") {
         return new Promise((resolve, reject) => {
             try {
-                this.instance.delete(url, { data: payload })
+                this.instance.delete(url)
                     .then((response) => {
                         const { data } = response
                         if (data.success) resolve(data)
