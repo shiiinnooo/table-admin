@@ -16,7 +16,7 @@ const model = ref([
     {
         label: '後台管理',
         items: [
-            { label: '產品列表', icon: 'pi pi-fw pi-id-card', to: '/admin/product' },
+            { label: '產品列表', icon: 'pi pi-fw pi-shopping-bag', to: '/admin/product' },
             { label: '訂單管理', icon: 'pi pi-fw pi-check-square', to: '/admin/order' }
         ]
     },
