@@ -2,7 +2,7 @@
     <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <router-link to="/admin/product" class="layout-topbar-logo">
-                <!-- <img src="/images/billows-sm-primary.png" alt="" width="48"> -->
+                <img src="/images/table.png" alt="" width="30">
                 <span class="font-bold">TAbLe Admin</span>
             </router-link>
             <button class="layout-menu-button layout-topbar-action ml-2" @click="onMenuToggle">

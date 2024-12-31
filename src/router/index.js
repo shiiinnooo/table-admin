@@ -113,13 +113,18 @@ const routes = [
                 path: '/documentation',
                 name: 'documentation',
                 component: () => import('@/views/pages/Documentation.vue')
-            }
+            },
         ]
     },
     {
         path: "/login",
         name: "Login",
         component: () => import('@/pages/Login.vue')
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: "NotFound",
+        component: () => import('@/pages/NotFound.vue'),
     },
     // sample
     {
