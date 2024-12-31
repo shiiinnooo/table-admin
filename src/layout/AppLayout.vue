@@ -24,7 +24,6 @@ import bus from '@/utils/mitt'
 import AppFooter from './AppFooter.vue'
 import AppSidebar from './AppSidebar.vue'
 import AppTopbar from './AppTopbar.vue'
-import storage from '@/utils/storage'
 
 const router = useRouter()
 const { layoutConfig, layoutState, isSidebarActive, resetMenu } = useLayout();
