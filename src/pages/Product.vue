@@ -51,7 +51,7 @@
                 </template>
             </Column>
         </DataTable>
-        <Paginator :first="first" :rows="10" :totalRecords="product.pagination.total_pages * 10" @page="pageChange" class="flex justify-end" />
+        <Paginator v-if="product.pagination?.total_pages" :first="first" :rows="10" :totalRecords="product.pagination.total_pages * 10" @page="pageChange" class="flex justify-end" />
     </div>
     <ProductModal />
 </template>
@@ -72,7 +72,6 @@ const product = reactive({
 })
 
 const first = ref(0) // 可以記錄當前頁數，如果 20 就代表前面有 20 筆，目前第三頁（每頁 10 筆)
-const isLastItem = ref(false) // 紀錄是否當前頁面最後一筆 (刪除用)
 
 onBeforeMount(() => {
     getProductList()

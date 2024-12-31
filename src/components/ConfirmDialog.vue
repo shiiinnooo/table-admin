@@ -4,13 +4,14 @@
         v-model:visible="visible"
         :style="{ width: '400px' }"
         :modal="true"
+        :draggable="false"
         @after-hide="hide"
     >
         <div class="flex py-2">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem" />
             <div>
-                <p>{{ dialog.message }}</p>
-                <p class="text-red-600 mt-4">{{ dialog.item }}</p>
+                <p v-if="dialog.message" class="mb-4">{{ dialog.message }}</p>
+                <p class="text-red-600">{{ dialog.item }}</p>
             </div>
         </div>
         <template #footer>
